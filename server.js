@@ -17,20 +17,21 @@ let data = {
   lastClick: null
 };
 
-// Настройка почты
+// ✅ Настройка SendGrid
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.sendgrid.net",
+  port: 587,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: "apikey", // обязательно слово "apikey"
+    pass: process.env.SENDGRID_API_KEY
   }
 });
 
 async function sendMail(lastClick) {
   try {
     await transporter.sendMail({
-      from: `"Valentine Bot" <${process.env.EMAIL_USER}>`,
-      to: process.env.EMAIL_USER,
+      from: `"Valentine Bot" <no-reply@valentine.com>`, // любой адрес
+      to: process.env.MAIL_TO, // твой Gmail
       subject: "💘 New Valentine Response",
       text: `
 Someone interacted with your Valentine page.
@@ -58,7 +59,7 @@ app.post("/click/:type", async (req, res) => {
   if (type === "YES") data.yes++;
   if (type === "NO") data.no++;
 
-  sendMail(type); // асинхронно, не блокирует ответ
+  sendMail(type); // асинхронно
 
   res.json({ success: true, data });
 });
