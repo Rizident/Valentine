@@ -42,8 +42,9 @@ First click: ${data.firstClick}
 Last click: ${lastClick}
 `
     });
+    console.log("Mail sent successfully!");
   } catch (err) {
-    console.log("Mail error:", err);
+    console.error("Mail error:", err);
   }
 }
 
@@ -57,7 +58,7 @@ app.post("/click/:type", async (req, res) => {
   if (type === "YES") data.yes++;
   if (type === "NO") data.no++;
 
-  sendMail(type); // асинхронно
+  sendMail(type); // асинхронно, не блокирует ответ
 
   res.json({ success: true, data });
 });
@@ -73,7 +74,7 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve('public/index.html'));
 });
 
-// Запуск сервера
+// ✅ Слушаем порт Render или локально 3000
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT)
