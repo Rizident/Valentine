@@ -1,0 +1,9 @@
+{
+  "name": "valentine-site",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.7"
+  }
+}

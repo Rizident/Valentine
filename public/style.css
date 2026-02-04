@@ -1,0 +1,123 @@
+/* Общие стили */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #ffe6eb, #fff0f5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  overflow: hidden;
+  color: #333;
+}
+
+h1 {
+  font-size: 3em;
+  margin: 20px 0;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* Гифка миньона */
+.gif {
+  width: 300px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  margin-top: 40px;
+}
+
+/* Контейнер кнопок */
+.buttons {
+  margin-top: 40px;
+  position: relative;
+  height: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+/* Кнопки YES/NO */
+button {
+  font-size: 24px;
+  padding: 18px 40px;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  user-select: none;
+}
+
+#yes {
+  background: #ff5e7e;
+  color: white;
+  box-shadow: 0 8px 20px rgba(255,94,126,0.4);
+}
+
+#yes:hover {
+  transform: scale(1.1);
+}
+
+#no {
+  background: #bbb;
+  color: white;
+  box-shadow: 0 8px 20px rgba(187,187,187,0.4);
+}
+
+#reset {
+  background: #666;
+  color: white;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Victory page стили */
+.victory-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff0f5, #ffe6eb);
+  text-align: center;
+}
+
+.victory-body h1 {
+  font-size: 4em;
+  color: #ff5e7e;
+  text-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+  margin-bottom: 40px;
+}
+
+.victory-body button {
+  background: #ff5e7e;
+  padding: 15px 40px;
+  font-size: 1.5em;
+  border-radius: 15px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 5px 15px rgba(255,94,126,0.4);
+  transition: all 0.3s ease;
+}
+
+.victory-body button:hover {
+  transform: scale(1.1);
+}
+
+/* Canvas для конфетти */
+canvas {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  z-index: 9999;
+}
