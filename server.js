@@ -1,29 +1,23 @@
 import express from "express";
-import fs from "fs";
 import nodemailer from "nodemailer";
+import path from "path";
 import dotenv from "dotenv";
 
-dotenv.config(); // загружаем .env до использования process.env
+dotenv.config();
 
 const app = express();
 app.use(express.json());
 app.use(express.static("public"));
 
-const DATA_FILE = "./data.json";
+// ✅ Счётчики в памяти
+let data = {
+  yes: 0,
+  no: 0,
+  firstClick: null,
+  lastClick: null
+};
 
-// функции для работы с данными
-function loadData() {
-  if (!fs.existsSync(DATA_FILE)) {
-    return { yes: 0, no: 0, firstClick: null, lastClick: null };
-  }
-  return JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
-}
-
-function saveData(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-}
-
-// настройка почты
+// Настройка почты
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -32,7 +26,7 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-async function sendMail(data, last) {
+async function sendMail(lastClick) {
   try {
     await transporter.sendMail({
       from: `"Valentine Bot" <${process.env.EMAIL_USER}>`,
@@ -45,7 +39,7 @@ YES: ${data.yes}
 NO: ${data.no}
 
 First click: ${data.firstClick}
-Last click: ${last}
+Last click: ${lastClick}
 `
     });
   } catch (err) {
@@ -53,10 +47,9 @@ Last click: ${last}
   }
 }
 
-// маршрут для кликов
+// Обработчик кликов
 app.post("/click/:type", async (req, res) => {
   const type = req.params.type.toUpperCase();
-  const data = loadData();
 
   if (!data.firstClick) data.firstClick = type;
   data.lastClick = type;
@@ -64,17 +57,31 @@ app.post("/click/:type", async (req, res) => {
   if (type === "YES") data.yes++;
   if (type === "NO") data.no++;
 
-  saveData(data);
-  sendMail(data, type); // отправка письма асинхронно
+  sendMail(type); // асинхронно
 
   res.json({ success: true, data });
 });
 
-// сброс счётчиков
+// Reset счётчиков
 app.post("/reset", (req, res) => {
-  const resetData = { yes: 0, no: 0, firstClick: null, lastClick: null };
-  saveData(resetData);
+  data = { yes: 0, no: 0, firstClick: null, lastClick: null };
   res.json({ success: true });
 });
 
-app.listen(3000, () => console.log("Server running"));
+// Отдаём index.html для всех маршрутов
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve('public/index.html'));
+});
+
+// Запуск сервера
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT)
+  .on('listening', () => console.log(`Server running on port ${PORT}`))
+  .on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`Port ${PORT} is already in use. Try another port.`);
+    } else {
+      console.error(err);
+    }
+  });
